@@ -1,0 +1,1 @@
+https://github.com/FL33TW00D/whisper-turbo                    Cross-Platform, GPU Accelerated Whisper                                                                        public            about 9 days ago
