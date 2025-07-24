@@ -1,0 +1,26 @@
+[package]
+name = "projectm-rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Rust frontend for ProjectM visualizer with CLI and overlay support"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.7"
+anyhow = "1.0"
+log = "0.4"
+env_logger = "0.10"
+directories = "5.0"
+chrono = "0.4"
+libc = "0.2"
+# Use the official projectm crate for v3.x
+projectm = { version = "3", features = ["playlist", "static"] }
+sdl2 = "0.35"
+gl = "0.14"
+
+[build-dependencies]
+# Remove pkg-config since we're using the projectm crate

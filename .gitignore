@@ -1,0 +1,13 @@
+# gemini api keys and other secrets
+.env
+
+# reference or unneeded sources and experiments
+reference-material/
+scratcgoad/
+
+
+# rust related
+Cargo.lock
+
+# gui related
+.qt/

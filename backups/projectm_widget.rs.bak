@@ -1,0 +1,28 @@
+use std::sync::Arc;
+
+use egui::PaintCallback;
+use egui_glow::CallbackFn;
+use projectm::core::ProjectM;
+
+pub struct ProjectMVisualizer {
+    projectm: Arc<ProjectM>,
+}
+
+impl ProjectMVisualizer {
+    pub fn new(projectm: Arc<ProjectM>) -> Self {
+        Self { projectm }
+    }
+
+    pub fn ui(&mut self, ui: &mut egui::Ui) {
+        let (rect, _) = ui.allocate_exact_size(ui.available_size(), egui::Sense::drag());
+
+        let projectm = self.projectm.clone();
+        let callback = PaintCallback {
+            rect,
+            callback: Arc::new(CallbackFn::new(move |_info, _painter| {
+                projectm.render_frame();
+            })),
+        };
+        ui.painter().add(callback);
+    }
+}

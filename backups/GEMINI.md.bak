@@ -1,0 +1,32 @@
+# Gemini's Internal State
+
+**IMPORTANT:**
+Always try to do work locally so that you don't waste tokens either input or output. Use any other means to not output or input tokens you do not need to. API limits are very tight and they 
+
+## Notes
+Directory projectm.wiki/ has the projectm v3.1.x wiki docs with tons of references
+Directory
+
+## Current Task
+
+The user wants to get the ProjectM visualization working within an `egui` window.
+The last attempt to modify `projectm_widget.rs` failed due to API limits and some incorrect code.
+
+## Plan
+
+1.  **Re-evaluate `projectm_widget.rs`**: The previous edit was a good start, but had errors. I need to re-read the file and the surrounding context.
+2.  **Create Shader Files**: The previous edit referenced `shader.vert` and `shader.frag`, but they don't exist. I need to create them in `music_visualizer/src/`.
+3.  **Fix `projectm_widget.rs`**:
+    - Correctly initialize the FBO and texture in `ProjectMWidget::new`. The texture needs to be allocated with a size.
+    - Correctly compile and link the shader program. I need to check for compilation errors.
+    - In the `PaintCallback`, ensure the viewport is set correctly before rendering ProjectM.
+    - Implement the drawing of the textured quad. This will involve setting up a vertex buffer.
+4.  **Fix `main.rs`**: The `ProjectMWidget::new` signature has changed, so I'll need to update the call in `main.rs`.
+5.  **Build and Verify**: Run `cargo build` to check for errors.
+
+## File Status
+
+- `music_visualizer/src/projectm_widget.rs`: Modified, but needs fixing.
+- `music_visualizer/src/main.rs`: Needs modification.
+- `music_visualizer/src/shader.vert`: Does not exist.
+- `music_visualizer/src/shader.frag`: Does not exist.

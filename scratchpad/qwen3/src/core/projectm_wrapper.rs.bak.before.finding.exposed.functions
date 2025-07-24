@@ -1,0 +1,58 @@
+//! Wrapper for ProjectM visualization library
+//! Version: 0.1.9
+
+use crate::config::Settings;
+use anyhow::Result;
+use projectm_sys::*;
+use std::ffi::CString;
+
+pub struct ProjectMCore {
+    pm: projectm_handle,
+    _settings: Settings,
+}
+
+impl ProjectMCore {
+    pub fn new(settings: &Settings) -> Result<Self> {
+        // Initialize ProjectM library
+        let pm = unsafe { projectm_create() };
+        if pm.is_null() {
+            return Err(anyhow::anyhow!("Failed to create ProjectM instance"));
+        }
+
+        // Configure ProjectM
+        unsafe {
+            projectm_set_window_size(pm, settings.display.width as usize, settings.display.height as usize);
+            projectm_set_fps(pm, 60); // TODO: Make configurable
+            projectm_set_mesh_size(pm, 32, 24); // TODO: Make configurable
+            projectm_set_preset_duration(pm, settings.presets.duration as f64);
+            
+            // Set preset directory
+            let preset_dir = CString::new(
+                settings.presets.directory.to_str()
+                    .ok_or_else(|| anyhow::anyhow!("Invalid preset directory path"))?
+            )?;
+            // Use the correct function name from projectm-sys
+            projectm_set_preset_directory(pm, preset_dir.as_ptr(), 1); // 1 = scan recursively
+        }
+
+        Ok(Self {
+            pm,
+            _settings: settings.clone(),
+        })
+    }
+    
+    pub fn feed_audio_data(&self, data: &[f32], channel: u32) -> Result<()> {
+        unsafe {
+            projectm_pcm_add_float(self.pm, data.as_ptr(), data.len() as u32, channel);
+        }
+        Ok(())
+    }
+}
+
+impl Drop for ProjectMCore {
+    fn drop(&mut self) {
+        unsafe {
+            projectm_destroy(self.pm);
+        }
+    }
+}
